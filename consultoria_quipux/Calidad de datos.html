@@ -13077,15 +13077,15 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Calidad-de-datos">Calidad de datos<a class="anchor-link" href="#Calidad-de-datos">&#182;</a></h1><h2 id="Introduccion">Introduccion<a class="anchor-link" href="#Introduccion">&#182;</a></h2><p>Los procesos que generan datos dependen de las entidades que pueden generar información, bien sea una maquina o una persona, y estas entidades estan sujetas a condiciones técnicas que muchas veces no se pueden monitoriar o actualizar, lo que genera perdida de calidad de la información.</p>
+<h1 id="Calidad-de-datos">Calidad de datos<a class="anchor-link" href="#Calidad-de-datos">&#182;</a></h1><h2 id="Introducci&#243;n">Introducci&#243;n<a class="anchor-link" href="#Introducci&#243;n">&#182;</a></h2><p>Los procesos que generan datos dependen de las entidades que pueden generar información, bien sea una maquina o una persona, y estas entidades estan sujetas a condiciones técnicas que muchas veces no se pueden monitoriar o actualizar, lo que genera perdida de calidad de la información.</p>
 <blockquote><p>Para implementar modelos de calidad de datos debemos conocer:</p>
 
 <pre><code>1. Periodo de implementación 
 2. Variables a trabajar
-3. Volumen de informacion</code></pre>
+3. Volumen de información</code></pre>
 </blockquote>
-<p>Los metodos para implementar modelos de calidad de datos son muy diversos y principalmente se basa en entender porque se genera informacion erronea en las operaciones y poder corregir estos errores desde la raiz, desde la ciencia de datos tenemos la opcion de cruzar informacion con base de datos o establecer criterios minimos en cada campo para asegurar que su valor se pueda generalizar en todos los analisis y procesos asociados a este.</p>
-<p>Si bien los metodos que trabajamos son especialmente eficientes, si no se tiene una capacidad de procesamiento adecuada es probable que nuestra memoria ram sea insuficiente a partir de 7M de comparaciones.</p>
+<p>Los métodos para implementar modelos de calidad de datos son muy diversos y principalmente se basa en entender porqué se genera informacion errónea en las operaciones y poder corregir estos errores desde la raiz, desde la ciencia de datos tenemos la opción de cruzar información con bases de datos o establecer criterios mínimos en cada campo para asegurar que su valor se pueda generalizar en todos los análisis y procesos asociados a este.</p>
+<p>Si bien los métodos que trabajamos son especialmente eficientes, si no se tiene una capacidad de procesamiento adecuada es probable que nuestra memoria ram sea insuficiente a partir de 7M de comparaciones.</p>
 
 </div>
 </div>
@@ -13093,14 +13093,14 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Planteamiento-del-problema">Planteamiento del problema<a class="anchor-link" href="#Planteamiento-del-problema">&#182;</a></h2><p>Resolver inconsistencias en la calidad de la informacion de una o varias variables en una base de datos objetivo, tomando como referencia una base de datos normativa, teniendo en cuenta criterios minimos que debe cumplir cada variable.</p>
-<p>Este planteamiento requiere llevar a cabo un procedimiento muy comun a las bases de datos, que se puede estandarizar con el tiempo y la madurez que toma el proceso con cada solucion prestada.</p>
-<p>Inicialmente debemos tener en cuenta que en cada paso del proceso se debe conservar la integridad total de la informacion de las bases de datos.</p>
+<h2 id="Planteamiento-del-problema">Planteamiento del problema<a class="anchor-link" href="#Planteamiento-del-problema">&#182;</a></h2><p>Resolver inconsistencias en la calidad de la información de una o varias variables en una base de datos objetivo, tomando como referencia una base de datos normativa, teniendo en cuenta criterios minimos que debe cumplir cada variable.</p>
+<p>Este planteamiento requiere llevar a cabo un procedimiento muy común a las bases de datos, que se puede estandarizar con el tiempo y la madurez que toma el proceso con cada solución prestada.</p>
+<p>Inicialmente debemos tener en cuenta que en cada paso del proceso se debe conservar la integridad total de la información de las bases de datos.</p>
 <p>Dado una base de datos objetivo llamada A con Na variables y Ma filas, lo primero que debemos preguntarnos es por la integridad de los valores de cada campo de la base de datos, debemos solucionar posibles problemas de valores nulos y formato de los campos con los que vamos trabajar.</p>
-<p>Seguidamente, identificamos la o las n variables Nn a trabajar en el proceso de calidad de datos, con el fin de establecer filtros y criterios minimos para tener en cuenta cada variable dentro del proceso.</p>
-<p>Dado otra base de datos normativa llamada B, con Nb variables y Mb filas, debemos identificar en lo posible, las mimas Nn variables que existen en A a trabajar en el proceso.</p>
-<p>Entonces, debemos hacer cruces de cada registro i en A y cada registro j en B para establecer coincidencias de cada variable Nn que cumpla con los minimos criterios para ser registros validos.</p>
-<p>Luego, con los registros en A que no cumplan con los criterios minimos los debemos procesar con diferentes metodos, donde podemos cuantificar diferentes valores propios de cada variable del registro y tener otros criterios adicionales para poder hallar una correcta coincidencia de cada registro de A en B.</p>
+<p>Seguidamente, identificamos la o las n variables Nn a trabajar en el proceso de calidad de datos, con el fin de establecer filtros y criterios mínimos para tener en cuenta cada variable dentro del proceso.</p>
+<p>Dado otra base de datos normativa llamada B, con Nb variables y Mb filas, debemos identificar en lo posible, las mismas Nn variables que existen en A a trabajar en el proceso.</p>
+<p>Del mismo modo, debemos hacer cruces de cada registro i en A y cada registro j en B para establecer coincidencias de cada variable Nn que cumpla con los ménimos criterios para ser registros válidos.</p>
+<p>Luego, con los registros en A que no cumplan con los criterios mínimos los debemos procesar con diferentes métodos, donde podemos cuantificar diferentes valores propios de cada variable del registro y tener otros criterios adicionales para poder hayar una correcta coincidencia de cada registro de A en B.</p>
 <p>Los registros que definitivamente no pasen este proceso se pueden siempre procesar de manera manual y este resultado puede ser de mucho valor para seguir evolucionando los procesos de calidad de datos.</p>
 
 </div>
@@ -13109,11 +13109,12 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#191;C&#243;mo-correr-el-modelo?">&#191;C&#243;mo correr el modelo?<a class="anchor-link" href="#&#191;C&#243;mo-correr-el-modelo?">&#182;</a></h2><p>Puede existir diferentes formas de correr el modelo, la siguiente funciona desde la terminal del sistema para sistema operativo windows:</p>
+<h2 id="&#191;C&#243;mo-correr-el-modelo?">&#191;C&#243;mo correr el modelo?<a class="anchor-link" href="#&#191;C&#243;mo-correr-el-modelo?">&#182;</a></h2><p>El modelo se encuentra en el repositorio de GITLAB de Quipux para el área de analítica, <strong>Oscar</strong> puede darles acceso.</p>
+<p>Puede existir diferentes formas de correr el modelo, la siguiente funciona desde la terminal del sistema para sistema operativo windows:</p>
 <ol>
 <li><p>Abrimos una terminal en la carpeta del modelo.</p>
 </li>
-<li><p>Ingresamos a la carpeta codigo de la siguiente manera:</p>
+<li><p>Ingresamos a la carpeta código de la siguiente manera:</p>
 <p><code>cd codigo</code></p>
 </li>
 </ol>
@@ -13122,7 +13123,7 @@ div#notebook {
 <p><code>python inicio_modelo</code></p>
 </li>
 </ol>
-<p><strong>Desde este punto, la salida del modelo va a depender de la parametrizacion.</strong></p>
+<p><strong>Desde este punto, la salida del modelo va a depender de la parametrización.</strong></p>
 <p>El modelo esta diseñado para interactuar con el usuario y pedir ciertos parámetros de interés.</p>
 
 </div>
@@ -13131,7 +13132,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Parametrizaci&#243;n-del-modelo">Parametrizaci&#243;n del modelo<a class="anchor-link" href="#Parametrizaci&#243;n-del-modelo">&#182;</a></h2><p>La parametrizacion del modelo consta de tres pasos para garantizar el correcto funcionamiento del modelo.</p>
+<h2 id="Parametrizaci&#243;n-del-modelo">Parametrizaci&#243;n del modelo<a class="anchor-link" href="#Parametrizaci&#243;n-del-modelo">&#182;</a></h2><p>La parametrización del modelo consta de tres pasos para garantizar el correcto funcionamiento del modelo.</p>
 <ol>
 <li><p>Lectura de datos:</p>
 <p>Debemos asegurar una correcta lectura de datos, con misma codificación y mismo tipo de variable para evitar errores en las funcionalidades del modelo.</p>
@@ -13139,7 +13140,7 @@ div#notebook {
 </ol>
 <ol>
 <li><p>Estructuración de criterios:</p>
-<p>Esta estructura la podemos ver como un asistente del objeto que se encarga de cruzar cada variable y cada criterio, se puede modificar para optimizar la experiencia del usuario y garantizar siempre los mejores resultados en cada análisis.</p>
+<p>Se estructura en el script <code>criterios_ejecucion</code> y esta estructura la podemos ver como un asistente del objeto que se encarga de cruzar cada variable y cada criterio, se puede modificar para optimizar la experiencia del usuario y garantizar siempre los mejores resultados en cada análisis.</p>
 </li>
 </ol>
 
@@ -13155,14 +13156,14 @@ div#notebook {
     <span class="s1">&#39;corrida&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    
     <span class="s1">&#39;indicaciones&#39;</span><span class="p">:{</span>
         <span class="s1">&#39;col_id&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="s1">&#39;ID_UNICO&#39;</span><span class="p">,</span> <span class="s1">&#39;GRUPO&#39;</span><span class="p">],</span> <span class="c1"># Origen, Destino</span>
-        <span class="s1">&#39;col_flexibles&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;LINEA2&#39;</span><span class="p">,</span> <span class="s1">&#39;CILINDRAJE&#39;</span><span class="p">],</span> 
-        <span class="s1">&#39;col_estrictas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;TABLA&#39;</span><span class="p">,</span> <span class="s1">&#39;marca&#39;</span><span class="p">],</span> <span class="c1"># Son las columnas objetivo para calcular las posibles combinación donde voy a analisar semejanza o palabras contenidas</span>
+        <span class="s1">&#39;col_flexibles&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;LINEA2&#39;</span><span class="p">,</span> <span class="s1">&#39;CILINDRAJE&#39;</span><span class="p">],</span> <span class="c1"># </span>
+        <span class="s1">&#39;col_estrictas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;TABLA&#39;</span><span class="p">,</span> <span class="s1">&#39;marca&#39;</span><span class="p">],</span> <span class="c1"># Son las columnas objetivo para calcular las posibles combinación donde voy a analizar semejanza o palabras contenidas</span>
         <span class="s1">&#39;on&#39;</span><span class="p">:</span> <span class="s1">&#39;LINEA2&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;desempate_cols&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CILINDRAJE&#39;</span><span class="p">,</span> <span class="s1">&#39;CAJA&#39;</span><span class="p">,</span> <span class="s1">&#39;NRO_PUERTAS&#39;</span><span class="p">,</span> <span class="s1">&#39;TRACCION&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;desempate_cols&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CILINDRAJE&#39;</span><span class="p">,</span> <span class="s1">&#39;CAJA&#39;</span><span class="p">,</span> <span class="s1">&#39;NRO_PUERTAS&#39;</span><span class="p">,</span> <span class="s1">&#39;TRACCION&#39;</span><span class="p">],</span> <span class="c1"># En este orden se corre cada criterio de desempate en el módulo desempate</span>
         <span class="s1">&#39;conservar&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CILINDRAJE_origen&#39;</span><span class="p">,</span> <span class="s1">&#39;CILINDRAJE_destino&#39;</span><span class="p">,</span> <span class="s1">&#39;TRACCION_origen&#39;</span><span class="p">,</span> <span class="s1">&#39;TRACCION_destino&#39;</span><span class="p">,</span> 
                       <span class="s1">&#39;CAJA_origen&#39;</span><span class="p">,</span> <span class="s1">&#39;CAJA_destino&#39;</span><span class="p">,</span> <span class="s1">&#39;TipCarga&#39;</span><span class="p">,</span> <span class="s1">&#39;NRO_PUERTAS_origen&#39;</span><span class="p">,</span> <span class="s1">&#39;NRO_PUERTAS_destino&#39;</span><span class="p">,</span> 
-                      <span class="s1">&#39;Promedio&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;conservar_exactas_origen&#39;</span><span class="p">:[</span><span class="s1">&#39;CLASE&#39;</span><span class="p">,</span> <span class="s1">&#39;Capacidad&#39;</span><span class="p">,</span> <span class="s1">&#39;CAJA&#39;</span><span class="p">,</span> <span class="s1">&#39;TipCarga&#39;</span><span class="p">,</span> <span class="s1">&#39;TRACCION&#39;</span><span class="p">,</span> <span class="s1">&#39;NRO_PUERTAS&#39;</span><span class="p">]</span>
+                      <span class="s1">&#39;Promedio&#39;</span><span class="p">],</span> <span class="c1"># Se consevan estas columnas en el modulo de semejanza y palabras contenidas</span>
+        <span class="s1">&#39;conservar_exactas_origen&#39;</span><span class="p">:[</span><span class="s1">&#39;CLASE&#39;</span><span class="p">,</span> <span class="s1">&#39;Capacidad&#39;</span><span class="p">,</span> <span class="s1">&#39;CAJA&#39;</span><span class="p">,</span> <span class="s1">&#39;TipCarga&#39;</span><span class="p">,</span> <span class="s1">&#39;TRACCION&#39;</span><span class="p">,</span> <span class="s1">&#39;NRO_PUERTAS&#39;</span><span class="p">]</span> <span class="c1"># se conservan estas columnas en el inicio del modelo</span>
         <span class="p">}</span>
     <span class="p">},</span>
     <span class="c1"># {</span>
@@ -13191,8 +13192,8 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <ol>
 <li><p>Selección y ordenamiento de métodos:</p>
-<p>Los metodos son muy importantes pues contituyen el orden y las funciones o cruces aplicados en cada momento del proceso de análisis, Es imporante conocer qué hace cada método proximamente retomaremos este tema.</p>
-<p>Asi se debe parametrizar los metodos dentro del modelo:</p>
+<p>Los métodos son muy importantes pues contituyen el orden y las funciones o cruces aplicados en cada momento del proceso de análisis, Es imporante conocer la función de cada método, próximamente retomaremos este tema.</p>
+<p>Asi se debe parametrizar los métodos dentro del modelo:</p>
 </li>
 </ol>
 

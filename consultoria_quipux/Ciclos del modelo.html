@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>Funciones</title>
+<title>Ciclos del modelo</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13077,27 +13077,17 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Funciones-del-Modelo">Funciones del Modelo<a class="anchor-link" href="#Funciones-del-Modelo">&#182;</a></h1><p>En el modelo podemos diferenciar dos tipos de funciones:</p>
+<h1 id="Ciclos-del-modelo">Ciclos del modelo<a class="anchor-link" href="#Ciclos-del-modelo">&#182;</a></h1><p>El modelo de semejanza recorre un orden determinado de instrucciones que parametrizamos desde el script de criterios de ejecución</p>
+<p>Los ciclos le dan un orden al proceso, una estructura homogenea a cada tabla de datos y flexibilidad de métodos para generar los resultados.</p>
 <ul>
-<li>funciones para procesar información</li>
-<li>funciones de apoyo</li>
+<li>Breve resumen de los ciclos:<ul>
+<li>inicio_modelo</li>
+<li>ciclo por corridas </li>
+<li>ciclo por métodos</li>
 </ul>
-<p>Generalmente las funciones para procesar informacion necesitan el objeto 'Indice' para guiar el procedimiento y la informacion de origen o destino de la data para las operaciones.</p>
-<p>Su objetivo es poder aplicar diferentes métodos de análisis a la data, con diversas variables y conservar una trazabilidad de los datos que se generan, creando indicadores que nos permite filtrar o clasificar los registros.</p>
-<p>Las funciones de apoyo son más sencillas y no requieren variables especificas, se caracterizan por generar informes, llevar una trazabilidad de las salidas, etc. Se deben desarrollar para optimizar la operación del modelo.</p>
-<h2 id="M&#233;todos">M&#233;todos<a class="anchor-link" href="#M&#233;todos">&#182;</a></h2><p>Los métodos son las funciones para procesar la informacién, se caracterizan por ser muy potentes y definir indicadores claros para clasificar o filtrar la información en caso que se utilice.</p>
-<p>A continuación veremos uno a uno los métodos:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Contenida">Contenida<a class="anchor-link" href="#Contenida">&#182;</a></h3><p>La función se llama palabra_contenida_sin_orden(indice, origen, destino) y se trata de poder hayar similitudes entre dos cadenas de texto, dado que tengan una parte de la cadena incluida en la otra o que esten en desorden, que este separada por un espacio, de la siguiente forma:</p>
-<blockquote><p>Range Rover == Rover Ranger<br>
-Aveo Sport == Aveo</p>
-</blockquote>
+</li>
+</ul>
+<p>El proceso comienza en el script <code>inicio_modelo</code>, donde tenemos parametrizadas las bases de datos <code>origen</code> y <code>destino</code>. llamamos la función <code>calcular</code> del script <code>coordinador_criterios</code> parametrizada como <code>calcular(origen, destino)</code>.</p>
 
 </div>
 </div>
@@ -13105,244 +13095,31 @@ Aveo Sport == Aveo</p>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">from</span> <span class="nn">utils.l1_contiene_l2</span> <span class="k">import</span> <span class="n">l1_contiene_l2</span>
-<span class="kn">import</span> <span class="nn">utils.utils</span> <span class="k">as</span> <span class="nn">ut</span>
-
-<span class="k">def</span> <span class="nf">palabra_contenida_sin_orden</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">origen</span><span class="p">,</span> <span class="n">destino</span><span class="p">):</span>    
-
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Tamaño matrices a comparar: origen {len(origen)}, destino {len(destino)}&#39;</span><span class="p">)</span>
-        
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;Calculando comparaciones&#39;</span><span class="p">)</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indice</span><span class="o">.</span><span class="n">estrictas</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">origen</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">destino</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">&#39;inner&#39;</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="n">indice</span><span class="o">.</span><span class="n">estrictas</span><span class="p">,</span> 
-                <span class="n">suffixes</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_origen&#39;</span><span class="p">,</span><span class="s1">&#39;_destino&#39;</span><span class="p">))</span>
-            
-    <span class="k">else</span><span class="p">:</span> 
-        <span class="n">df</span> <span class="o">=</span> <span class="n">origen</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">destino_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">destino</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">destino_id</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">COL_1</span><span class="p">]</span> <span class="o">=</span> <span class="n">origen</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">ON</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">COL_2</span><span class="p">]</span> <span class="o">=</span> <span class="n">destino</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">ON</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Número de comparaciones: {len(df)}&#39;</span><span class="p">)</span>
-
-    <span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    <span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    
-    <span class="c1">###########################</span>
-    <span class="c1">###########################</span>
-
-<span class="c1">#     baches para lineas qx</span>
-
-    <span class="n">bach</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">estrictas</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">referencia</span><span class="p">,</span> <span class="n">marca</span> <span class="ow">in</span> <span class="n">bach</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-
-        <span class="n">df_temp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;TABLA&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">referencia</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;marca&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">marca</span><span class="p">])]</span>
-
-        <span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
-               <span class="p">[</span><span class="n">df1</span><span class="p">,</span> <span class="n">l1_contiene_l2</span><span class="p">(</span><span class="n">df_temp</span><span class="p">,</span> <span class="n">indice</span><span class="o">.</span><span class="n">COL_1</span><span class="p">,</span> <span class="n">indice</span><span class="o">.</span><span class="n">COL_2</span><span class="p">)])</span>
-        <span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
-               <span class="p">[</span><span class="n">df2</span><span class="p">,</span> <span class="n">l1_contiene_l2</span><span class="p">(</span><span class="n">df_temp</span><span class="p">,</span> <span class="n">indice</span><span class="o">.</span><span class="n">COL_2</span><span class="p">,</span> <span class="n">indice</span><span class="o">.</span><span class="n">COL_1</span><span class="p">)])</span>
-
-    <span class="c1">#####################</span>
-
-    <span class="c1">## Sin baches</span>
-    
-<span class="c1">#     df1 = pd.concat([df1, l1_contiene_l2(df, indice.COL_1, indice.COL_2)],</span>
-<span class="c1">#             axis=1)</span>
-<span class="c1">#     df2 = pd.concat([df2, l1_contiene_l2(df, indice.COL_2, indice.COL_1)],</span>
-<span class="c1">#             axis=1)</span>
-
-    <span class="c1">#####################</span>
-    <span class="c1">#####################</span>
-    
-    <span class="c1"># Concatenamos resultados y generamos la salida</span>
-    
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">])</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span> <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">destino_id</span> <span class="o">+</span> <span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">COL_1</span><span class="p">,</span> <span class="n">indice</span><span class="o">.</span><span class="n">COL_2</span><span class="p">]</span> 
-            <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">estrictas</span> <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">conservar</span><span class="p">]</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;Palabras_contenida&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;SI&#39;</span>
-    <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">origen</span><span class="p">[</span><span class="o">~</span><span class="n">origen</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
-            <span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]])]</span>
-
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Resultado: homologaciones por palabras contenidas {len(df)}&#39;</span><span class="p">)</span>
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Resultados sin coincidencia: {len(sin_coincidencia)}&#39;</span><span class="p">)</span>        
-    
-    <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">sin_coincidencia</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Cruzar">Cruzar<a class="anchor-link" href="#Cruzar">&#182;</a></h3><p>La funcion se llama destino_origen(indice, origen) y tiene como objetivo realizar automaticamente una verificacion cruzada de la informacion que se quiere procesar.<br>
-Toma una lista de archivos procesados por otros metodos y los verifica mediante el metodo de semejanza contra los datos de destino</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">metadata.directory</span> <span class="k">as</span> <span class="nn">metadir</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">metodos.semejanza</span> <span class="k">as</span> <span class="nn">semejanza</span>
-<span class="kn">import</span> <span class="nn">utils.utils</span> <span class="k">as</span> <span class="nn">ut</span>
 
+<span class="kn">import</span> <span class="nn">coordinador_criterios</span> <span class="k">as</span> <span class="nn">homologar</span>
 
-<span class="k">def</span> <span class="nf">destino_origen</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">origen</span><span class="p">):</span>
+<span class="kn">import</span> <span class="nn">lectura_datos.datos_ministerio</span> <span class="k">as</span> <span class="nn">datos_min</span>
+<span class="kn">import</span> <span class="nn">lectura_datos.vehiculos</span> <span class="k">as</span> <span class="nn">vehiculos</span>
 
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;### Calculando cruces en base de datos&#39;</span><span class="p">)</span> 
-    <span class="c1"># Lectura nombres de archivos a trabajar</span>
+<span class="kn">import</span> <span class="nn">utils.set_up</span> <span class="k">as</span> <span class="nn">set_up</span>
 
-    <span class="n">dic_archivos</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span><span class="p">,</span> <span class="s1">&#39;dic_archivos.txt&#39;</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-     
-    <span class="c1"># En listamos y depuracmos los nombres de los archivos</span>
+<span class="c1"># Iniciamos los archivos de entrada y salida</span>
+<span class="n">set_up</span><span class="o">.</span><span class="n">inicio</span><span class="p">()</span>
 
-    <span class="n">list_files</span> <span class="o">=</span> <span class="n">dic_archivos</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-    <span class="n">list_files_edit</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">list_files</span><span class="p">]</span>
+<span class="c1"># Cargamos base de datos</span>
 
-    <span class="c1"># Leemos los archivos y los trabajamos</span>
-    
-    <span class="k">for</span> <span class="n">archivo</span> <span class="ow">in</span> <span class="n">list_files_edit</span><span class="p">:</span>
-        <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Lectura de datos de archivo: </span><span class="si">{archivo}</span><span class="s1">&#39;</span><span class="p">)</span> 
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span><span class="p">,</span> <span class="n">archivo</span><span class="p">)),</span> <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span> 
-        
-        <span class="c1"># ut.save_log(f&#39;Tamaño matrices a comparar: origen {len(origen)}, destino &#39;</span>
-        <span class="c1">#     + f&#39;{len(df)}&#39;)</span>
-        <span class="c1">#nombres_cols = input(&#39;&#39;)    </span>
+<span class="n">tablas_ministerio</span> <span class="o">=</span> <span class="n">datos_min</span><span class="o">.</span><span class="n">min_imp</span><span class="p">()</span>
+<span class="n">vehiculos_sap</span><span class="p">,</span> <span class="n">registros_unicos</span> <span class="o">=</span> <span class="n">vehiculos</span><span class="o">.</span><span class="n">cargar_sap</span><span class="p">(</span><span class="n">tipo</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># Calculamos semajanza</span>
-            
-        <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;### Calculando semejanza&#39;</span><span class="p">)</span>
-        
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span> <span class="n">indice</span><span class="o">.</span><span class="n">destino_id</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># # Cálculamos criterios</span>
 
-        <span class="n">temp_1</span> <span class="o">=</span> <span class="n">indice</span><span class="o">.</span><span class="n">destino_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">temp_2</span> <span class="o">=</span> <span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_1</span>
-        <span class="n">indice</span><span class="o">.</span><span class="n">destino_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_2</span>
-        <span class="n">homologacion</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">semejanza</span><span class="o">.</span><span class="n">semejanza</span><span class="p">(</span> <span class="n">indice</span><span class="p">,</span> <span class="n">origen</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-        <span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_2</span>
-        <span class="n">indice</span><span class="o">.</span><span class="n">destino_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_1</span>
+<span class="n">homologar</span><span class="o">.</span><span class="n">calcular</span><span class="p">(</span><span class="n">registros_unicos</span><span class="p">,</span> <span class="n">tablas_ministerio</span><span class="p">)</span> <span class="c1"># (origen, destino)</span>
 
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;cruce_&#39;</span> <span class="o">+</span> <span class="n">archivo</span>
-        <span class="n">homologacion</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span><span class="p">,</span> <span class="n">name</span><span class="p">)),</span> 
-            <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>  
- 
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ModuleNotFoundError</span>                       Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-1-5b270bcb90d0&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">import</span> os
-<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">import</span> metadata<span class="ansi-blue-fg">.</span>directory <span class="ansi-green-fg">as</span> metadir
-<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-green-fg">import</span> re
-<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-green-fg">import</span> pandas <span class="ansi-green-fg">as</span> pd
-<span class="ansi-green-intense-fg ansi-bold">      5</span> <span class="ansi-green-fg">import</span> metodos<span class="ansi-blue-fg">.</span>semejanza <span class="ansi-green-fg">as</span> semejanza
-
-<span class="ansi-red-fg">ModuleNotFoundError</span>: No module named &#39;metadata&#39;</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Desagregar">Desagregar<a class="anchor-link" href="#Desagregar">&#182;</a></h3><p>La función se llama desempate(indice, df, columna), especialmente diseñada para homologación de vehículos, se trata de identificar características inconsistentes en una base de datos y poder retirarlas sin afectar posteriormente la data. Este proceso es un data clenaing predeterminado para vehículos pero se puede parametrizar para otros procesos.<br>
-Usamos expresiones regulares y archivos de referencia para generar las nuevas columnas.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">import</span> <span class="nn">metadata.directory</span> <span class="k">as</span> <span class="nn">metadir</span>
-
-<span class="k">def</span> <span class="nf">desagregar</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">origen</span><span class="p">):</span>  
-
-    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Desagregamos la columna: </span><span class="si">{indice.ON}</span><span class="s1"> de la base de datos origen&#39;</span><span class="p">)</span>
-
-    <span class="n">origen</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">ON</span> <span class="o">+</span> <span class="s1">&#39;_ORIGINAL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">origen</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">ON</span><span class="p">]</span>
-    
-    <span class="c1"># Lecutra de datos con características a desagregar</span>
-    
-    <span class="n">name</span> <span class="o">=</span> <span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">limp_col</span>
-    <span class="n">reglas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
-    <span class="n">reglas</span> <span class="o">=</span> <span class="p">(</span><span class="n">reglas</span><span class="p">[</span><span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;especial&#39;</span><span class="p">]</span>
-        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">ref_len</span><span class="o">=</span><span class="n">reglas</span><span class="o">.</span><span class="n">referencia</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">())</span>
-        <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;ref_len&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;ref_len&#39;</span><span class="p">))</span>
-    
-    <span class="c1"># Corrección de nombres</span>
-    
-    <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;CAJA&#39;</span><span class="p">,</span> <span class="s1">&#39;TIPO_CAJA&#39;</span><span class="p">)</span>
-    <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;CARROCERIA&#39;</span><span class="p">,</span> <span class="s1">&#39;sin categoria&#39;</span><span class="p">)</span>
-    <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;CAPACIDAD&#39;</span><span class="p">,</span> <span class="s1">&#39;sin categoria&#39;</span><span class="p">)</span>
-    <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;PUERTAS&#39;</span><span class="p">,</span> <span class="s1">&#39;PUERTAS_LINEA&#39;</span><span class="p">)</span>
-    <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;CLASE&#39;</span><span class="p">,</span> <span class="s1">&#39;sin categoria&#39;</span><span class="p">)</span>
-    <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reglas</span><span class="p">[</span><span class="s1">&#39;campo&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;CILINDRAJE&#39;</span><span class="p">,</span> <span class="s1">&#39;CILINDRAJE_LINEA&#39;</span><span class="p">)</span>
-    
-    <span class="c1"># Reemplazo por tipo de campo</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">reglas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-
-        <span class="n">encuentra</span><span class="p">,</span> <span class="n">reemplaza</span><span class="p">,</span> <span class="n">columna</span> <span class="o">=</span> <span class="n">reglas</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-
-        <span class="k">if</span> <span class="n">columna</span> <span class="o">!=</span> <span class="s1">&#39;sin categoria&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">columna</span> <span class="ow">in</span> <span class="n">origen</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;revisar columna inexistente: &#39;</span> <span class="o">+</span> <span class="n">columna</span><span class="p">)</span>
-            <span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>     
-
-        <span class="n">index</span> <span class="o">=</span> <span class="n">origen</span><span class="p">[</span><span class="n">origen</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">ON</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">encuentra</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> 
-                <span class="n">regex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span><span class="o">.</span><span class="n">index</span>
-
-        <span class="k">if</span> <span class="n">columna</span> <span class="o">!=</span> <span class="s1">&#39;sin categoria&#39;</span><span class="p">:</span>
-            <span class="n">origen</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">columna</span><span class="p">]</span> <span class="o">=</span> <span class="n">reemplaza</span>
-
-        <span class="n">origen</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">indice</span><span class="o">.</span><span class="n">ON</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">origen</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="n">indice</span><span class="o">.</span><span class="n">ON</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                        <span class="s1">&#39;(^| |-)&#39;</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">encuentra</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;($| |-)&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span>      
-
-    <span class="n">origen</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">ON</span><span class="p">]</span> <span class="o">=</span> <span class="n">origen</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">ON</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">origen</span>
+<span class="c1"># Finalizamos para organizar los archivos de entrada y salida en orden periodico</span>
+<span class="n">set_up</span><span class="o">.</span><span class="n">final</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13353,10 +13130,8 @@ Usamos expresiones regulares y archivos de referencia para generar las nuevas co
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Desempate">Desempate<a class="anchor-link" href="#Desempate">&#182;</a></h3><p>La función se llama desempate(indice, df, columna)</p>
-<p>Se debe tener reglas claras, basadas en operaciones exactas como por ejemplo min, max, o casos solucionados en 'tablas de verdad'.</p>
-<p>Funciona para establecer registros únicos o más específicos de acuerdo a variables adicionales de comparación, sin necesidad de entrar a discutir la veracidad de esas varibales.</p>
-<p>Cada llamada de desempate acumula registros únicos y duplicados. Es una función recursiva sobre homologaciones para depurar al máximo los duplicados y el residuo se llama sin solución, estos registros se pueden estudiar cómo alternativas de homologación.</p>
+<p>El proceso continua con el ciclo de <code>corrida</code>, este ciclo se parametriza en el script <code>criterios_ejecucion</code> y es representado por cada elemento de la lista <code>col_index</code>.<br>
+en este punto tenemos las siguientes instrucciones:</p>
 
 </div>
 </div>
@@ -13366,418 +13141,37 @@ Usamos expresiones regulares y archivos de referencia para generar las nuevas co
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-<span class="kn">import</span> <span class="nn">utils.utils</span> <span class="k">as</span> <span class="nn">ut</span>
-
-<span class="kn">import</span> <span class="nn">metadata.directory</span> <span class="k">as</span> <span class="nn">metadir</span>
-
-<span class="n">CARPETA_DATA</span> <span class="o">=</span> <span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_DATA</span>
-
-<span class="k">def</span> <span class="nf">desempate</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">columna</span><span class="p">):</span>
-
-    <span class="c1"># Filtramos homologaciones únicas     </span>
-
-    <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="s1">&#39;ID_UNICO&#39;</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">calcular</span><span class="p">(</span> <span class="n">origen</span><span class="p">,</span> <span class="n">destino</span><span class="p">):</span>
     
-    <span class="n">total</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="c1"># Iniciamos el dataframe &#39;sin_coincidencia&#39; objetivo del proceso</span>
+    <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">origen</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     
-    <span class="n">unicos</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="s1">&#39;ID_UNICO&#39;</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">)</span>
-    
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;Criterio de trabajo: &#39;</span><span class="p">,</span> <span class="n">columna</span><span class="p">)</span>
-
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Registros unicos: {len(unicos)}, Registros duplicados: {len(duplicados)}&#39;</span><span class="p">)</span>
-    
-    <span class="c1"># Según la columna tenemos un criterio de desempate distinto.</span>
-    
-    <span class="k">if</span> <span class="n">columna</span> <span class="o">==</span> <span class="s1">&#39;CILINDRAJE&#39;</span><span class="p">:</span>
-        <span class="n">duplicadas</span><span class="p">[</span><span class="s1">&#39;_diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">duplicadas</span><span class="o">.</span><span class="n">CILINDRAJE_destino</span> <span class="o">-</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">CILINDRAJE_origen</span><span class="p">)</span> <span class="c1"># Cilindraje Destino menos Origen</span>
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="p">[</span><span class="n">duplicadas</span><span class="o">.</span><span class="n">_diff</span> <span class="o">==</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;ID_UNICO&#39;</span><span class="p">)[</span><span class="s1">&#39;_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="nb">min</span><span class="p">)]</span>
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_diff&#39;</span><span class="p">])</span>
-
-    <span class="k">elif</span> <span class="n">columna</span> <span class="o">==</span> <span class="s1">&#39;CAPACIDAD&#39;</span><span class="p">:</span>
-        <span class="n">duplicadas</span><span class="p">[</span><span class="s1">&#39;_diff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">duplicadas</span><span class="o">.</span><span class="n">Capacidad_destino</span> <span class="o">-</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">Capacidad_origen</span><span class="p">)</span>
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="p">[</span><span class="n">duplicadas</span><span class="o">.</span><span class="n">_diff</span> <span class="o">==</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;ID_UNICO&#39;</span><span class="p">)[</span><span class="s1">&#39;_diff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="nb">min</span><span class="p">)]</span>
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_diff&#39;</span><span class="p">])</span>
-
-    <span class="k">elif</span> <span class="n">columna</span> <span class="o">==</span> <span class="s1">&#39;PROMEDIO&#39;</span><span class="p">:</span>
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="p">[</span>
-            <span class="n">duplicadas</span><span class="o">.</span><span class="n">Promedio</span> <span class="o">==</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;ID_UNICO&#39;</span><span class="p">)[</span><span class="s1">&#39;Promedio&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="nb">max</span><span class="p">)</span>
-        <span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="s1">&#39;ID_UNICO&#39;</span><span class="p">)</span>
-
-    <span class="k">else</span><span class="p">:</span>                      
-        <span class="c1"># Lectura de criterios según columna</span>
-        <span class="k">if</span> <span class="n">columna</span> <span class="o">==</span> <span class="s1">&#39;CAJA&#39;</span><span class="p">:</span>
-            <span class="n">criterios</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CARPETA_DATA</span><span class="p">,</span> <span class="s1">&#39;criterio_cajas.csv&#39;</span><span class="p">,)),</span> 
-                                    <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">object</span><span class="p">,</span><span class="n">engine</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">)</span>
-            
-        <span class="k">elif</span> <span class="n">columna</span> <span class="o">==</span> <span class="s1">&#39;NRO_PUERTAS&#39;</span><span class="p">:</span>
-            <span class="n">criterios</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CARPETA_DATA</span><span class="p">,</span> <span class="s1">&#39;criterio_puertas.csv&#39;</span><span class="p">,)),</span> 
-                                    <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">object</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">)</span>
-            <span class="n">criterios</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="nb">str</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="n">criterios</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span><span class="s1">&#39;VALOR&#39;</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">columna</span> <span class="o">==</span> <span class="s1">&#39;TRACCION&#39;</span><span class="p">:</span>
-            <span class="n">criterios</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CARPETA_DATA</span><span class="p">,</span> <span class="s1">&#39;criterio_traccion.csv&#39;</span><span class="p">,)),</span> 
-                                    <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">object</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">)</span>
-            <span class="n">criterios</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="nb">str</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="n">criterios</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span><span class="s1">&#39;VALOR&#39;</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Iniciamos el ciclo por corrida, dado los n elementos de la lista col_index</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">iteracion</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ce</span><span class="o">.</span><span class="n">col_index</span><span class="p">):</span>
         
-        <span class="c1"># calculamos los valores BIN de cada combinación</span>
+        <span class="c1"># Inicializamos el objeto &#39;indice&#39;</span>
+        <span class="n">indice</span> <span class="o">=</span> <span class="n">datos</span><span class="o">.</span><span class="n">Indice</span><span class="p">(</span><span class="n">iteracion</span><span class="p">,</span> <span class="n">ce</span><span class="o">.</span><span class="n">criterios</span><span class="p">)</span>
         
-        <span class="n">values</span> <span class="o">=</span> <span class="n">criterios</span><span class="p">[</span><span class="s1">&#39;VALOR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
-        <span class="n">values</span><span class="p">[</span><span class="s1">&#39;BIN&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))]</span>
-        
-        <span class="c1"># Asignamos el valor en la columna suma dado el destino</span>
-        
-        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">valor</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-            <span class="n">duplicadas</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">duplicadas</span><span class="p">[</span><span class="n">columna</span> <span class="o">+</span> <span class="s1">&#39;_destino&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span><span class="p">,</span> <span class="s1">&#39;suma&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">valor</span>
-        
-        <span class="n">duplicadas</span><span class="o">.</span><span class="n">suma</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">suma</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-        <span class="n">duplicadas</span><span class="o">.</span><span class="n">suma</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">suma</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.0&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">duplicadas</span><span class="o">.</span><span class="n">suma</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">suma</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        
-        <span class="c1"># Generamos la comparación dado el valor</span>
-        <span class="n">criterios_matriz</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">criterios</span><span class="p">,</span> <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;VALOR&#39;</span><span class="p">],</span> <span class="n">value_vars</span><span class="o">=</span><span class="n">criterios</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> 
-                                              <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;suma&#39;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;criterio&#39;</span><span class="p">)</span>
+        <span class="c1"># Mostramos corrida actual</span>
+        <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;## Corrida: </span><span class="si">{indice.corrida}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="n">criterios_matriz</span><span class="p">[</span><span class="s1">&#39;suma&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">criterios_matriz</span><span class="p">[</span><span class="s1">&#39;suma&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-        
-        <span class="c1"># Comparamos las duplicadas y filtrmaos por criterio</span>
-            
-        <span class="n">suma</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;suma&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;suma&#39;</span><span class="p">])</span>
-        
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">suma</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">)</span>
-        
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">criterios_matriz</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;suma&#39;</span><span class="p">,</span> <span class="n">columna</span> <span class="o">+</span> <span class="s1">&#39;_origen&#39;</span><span class="p">],</span> 
-                <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;suma&#39;</span><span class="p">,</span> <span class="s1">&#39;VALOR&#39;</span><span class="p">])</span>  
-        <span class="n">duplicadas_</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="p">[(</span><span class="n">duplicadas</span><span class="o">.</span><span class="n">criterio</span> <span class="o">!=</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">duplicadas</span><span class="p">[</span><span class="n">columna</span> <span class="o">+</span> <span class="s1">&#39;_destino&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">criterio</span><span class="p">)]</span>
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="p">[</span><span class="n">duplicadas</span><span class="o">.</span><span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">]</span>
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">duplicadas</span><span class="p">,</span> <span class="n">duplicadas_</span><span class="p">],</span> <span class="n">sort</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="n">duplicadas</span> <span class="o">=</span> <span class="n">duplicadas</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;suma&#39;</span><span class="p">,</span> <span class="s1">&#39;VALOR&#39;</span><span class="p">,</span> <span class="s1">&#39;criterio&#39;</span><span class="p">])</span>
-
-    
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Registros duplicados despues de criterio de desempate: {len(duplicados)}&#39;</span><span class="p">)</span>
-
-    <span class="c1"># Debemos verificar que df_consolidado y sin_solución tengan la estructura correcta</span>
-    
-    <span class="n">df_consolidado</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">duplicadas</span><span class="p">,</span> <span class="n">unicos</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    
-    
-    <span class="c1"># Alternativas de homologación desistedas por los métodos de desempate</span>
-    <span class="n">sin_solucion</span> <span class="o">=</span> <span class="n">total</span><span class="p">[</span><span class="n">total</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">])]</span>
-    
-    <span class="k">return</span> <span class="n">df_consolidado</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Exactas">Exactas<a class="anchor-link" href="#Exactas">&#182;</a></h3><p>La funcion se llama exactas(indice, origen, destino, k)</p>
-<p>Es la automatizacion de varios procesos:</p>
-<ol>
-<li>Calculo de posibles combinaciones de variables</li>
-<li>Hallar registros con coincidencias exactas en todos los campos</li>
-<li>Hallar registros con coincidencias exactas en campos especificos</li>
-<li>Filtar y consolidar los registros de la base de datos de origen</li>
-</ol>
-<p>Son procesos muy simples pero en esta configuracion optimiza mucho el analisis y garantiza la integridad de la informacion.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="c1">#import numpy as np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-<span class="kn">import</span> <span class="nn">metadata.directory</span> <span class="k">as</span> <span class="nn">metadir</span>
-<span class="kn">import</span> <span class="nn">utils.utils</span> <span class="k">as</span> <span class="nn">ut</span>
-
-<span class="n">path</span> <span class="o">=</span> <span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span>
-
-<span class="k">def</span> <span class="nf">exactas</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">origen</span><span class="p">,</span> <span class="n">destino</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
- 
-    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Combinaciones a comparar: {len(indice.on_cols)}&#39;</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comb</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indice</span><span class="o">.</span><span class="n">on_cols</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Combinación {i+1}: </span><span class="si">{comb}</span><span class="s1">&#39;</span><span class="p">)</span> 
-
-    <span class="c1"># Aquí podemos editar cualquier comparación no deseada</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;¿Desea eliminar alguna combinación? pruebe eliminando una &#39;</span>
-            <span class="o">+</span> <span class="s1">&#39;combinación a la vez.&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Si desea continuar digite el número cero(0)&#39;</span><span class="p">)</span>
-    <span class="n">var</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span>
-            <span class="n">f</span><span class="s1">&#39;Escoge un número entero entre 1 y {len(indice.on_cols)}: &#39;</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Digitó el número: </span><span class="si">{var}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="n">var</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-
-        <span class="k">del</span> <span class="n">indice</span><span class="o">.</span><span class="n">on_cols</span><span class="p">[</span><span class="n">var</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Combinaciones a comparar: {len(indice.on_cols)}&#39;</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comb</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indice</span><span class="o">.</span><span class="n">on_cols</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Combinación {i+1}: </span><span class="si">{comb}</span><span class="s1">&#39;</span><span class="p">)</span>
-        
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;¿Desea eliminar alguna combinación? pruebe insertando &#39;</span>
-                <span class="o">+</span> <span class="s1">&#39;uno o más dígitos separados por comas.&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;para continuar digite el número cero(0)&#39;</span><span class="p">)</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span>
-                <span class="n">f</span><span class="s1">&#39;Escoge uno o más números enteroS entre 1 y &#39;</span>
-                <span class="o">+</span> <span class="n">f</span><span class="s1">&#39;{len(indice.on_cols)}: &#39;</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Digitó el número: </span><span class="si">{var}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="c1"># Editar orden de las comparaciones</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;¿Desea reorganizar las combinaciones? pruebe organizando una &#39;</span>
-            <span class="o">+</span> <span class="s1">&#39;combinación a la vez.&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Si desea continuar digite el número cero(0)&#39;</span><span class="p">)</span>
-    <span class="n">var_2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Escoge la combinación: &#39;</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Digitó el número: </span><span class="si">{var_2}</span><span class="s1">&#39;</span><span class="p">)</span>
-    
-
-    <span class="k">while</span> <span class="n">var_2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        
-        <span class="n">indx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Escoge la posición que deseas que ocupe: &#39;</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Digitó el número: </span><span class="si">{indx}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">item</span> <span class="o">=</span> <span class="n">indice</span><span class="o">.</span><span class="n">on_cols</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">var_2</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">indice</span><span class="o">.</span><span class="n">on_cols</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">indx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Combinaciones a comparar: {len(indice.on_cols)}&#39;</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comb</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indice</span><span class="o">.</span><span class="n">on_cols</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Combinación {i+1}: </span><span class="si">{comb}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;¿Desea reorganizar las combinaciones? pruebe organizando &#39;</span>
-                <span class="o">+</span> <span class="s1">&#39;una combinación a la vez.&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Si desea continuar digite el número cero(0)&#39;</span><span class="p">)</span>
-        <span class="n">var_2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Escoge la combinación: &#39;</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Digitó el número: </span><span class="si">{var_2}</span><span class="s1">&#39;</span><span class="p">)</span>    
-
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Combinaciones a comparar: {len(indice.on_cols)}&#39;</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comb</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indice</span><span class="o">.</span><span class="n">on_cols</span><span class="p">):</span>
-        <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Combinación {i+1}: </span><span class="si">{comb}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Tamaño matrices a comparar: origen {len(origen)}, destino &#39;</span>
-            <span class="o">+</span> <span class="n">f</span><span class="s1">&#39;{len(destino)}&#39;</span><span class="p">)</span>
-
-    <span class="n">no_match</span> <span class="o">=</span> <span class="n">origen</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
- 
-    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indice</span><span class="o">.</span><span class="n">on_cols</span><span class="p">):</span>
-        
-        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">exactas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span> <span class="n">no_match</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_cols</span><span class="p">],</span> 
-                                        <span class="n">destino</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">destino_cols</span><span class="p">],</span> 
-                                        <span class="n">on</span> <span class="o">=</span> <span class="n">i</span><span class="p">)</span>  
-
-                <span class="c1">#exactas = exactas.drop_duplicates(indice.destino_id)</span>
-                <span class="n">no_match</span> <span class="o">=</span> <span class="n">no_match</span><span class="p">[</span><span class="o">~</span><span class="n">no_match</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
-                        <span class="n">exactas</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]])]</span>
-                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Coincidentes exactas: {len(exactas)}, restantes: &#39;</span>
-                        <span class="o">+</span> <span class="n">f</span><span class="s1">&#39;{len(no_match)}&#39;</span><span class="p">)</span>
-                          
-        <span class="k">else</span><span class="p">:</span>
-                <span class="n">exactas_incompletas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span> <span class="n">no_match</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_cols</span><span class="p">],</span> 
-                                        <span class="n">destino</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">destino_cols</span><span class="p">],</span> 
-                                        <span class="n">on</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;_modelo&#39;</span><span class="p">))</span>                 
-                
-                <span class="n">no_match</span> <span class="o">=</span> <span class="n">no_match</span><span class="p">[</span><span class="o">~</span><span class="n">no_match</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
-                        <span class="n">exactas_incompletas</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]])]</span>
-                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Columnas a comparar </span><span class="si">{i}</span><span class="s1">, resultado: &#39;</span>
-                        <span class="o">+</span> <span class="n">f</span><span class="s1">&#39;{len(exactas_incompletas)} similitudes, restantes: &#39;</span>
-                        <span class="o">+</span> <span class="n">f</span><span class="s1">&#39;{len(no_match)}&#39;</span><span class="p">)</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;detalle_comparacion_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>
-                <span class="n">exactas_incompletas</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
-                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)),</span> <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> 
-                        <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Archivos generado: detalle_comparacion </span><span class="si">{j}</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">ut</span><span class="o">.</span><span class="n">docs_save</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-
-                <span class="k">del</span> <span class="n">exactas_incompletas</span>
-
-        
-    <span class="k">return</span> <span class="n">exactas</span><span class="p">,</span> <span class="n">no_match</span>
-        
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Semejanza">Semejanza<a class="anchor-link" href="#Semejanza">&#182;</a></h3><p>La funcion se llama semejanza(indice, origen, destino)</p>
-<p>Consiste en generar un filtro a partir de un indicador de distancia entre dos cadenas de texto de la siguiente manera:</p>
-<blockquote><p>c1 = Rochelle<br>
-  c2 = Rochele<br>
-  dist(c1,c2) = 0.9<br>
-  si x &gt; 0.7 -----&gt; C &gt; x == OK y C &lt; x == NOT OK</p>
-</blockquote>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">Levenshtein</span> <span class="k">import</span> <span class="n">ratio</span>
-<span class="kn">from</span> <span class="nn">Levenshtein</span> <span class="k">import</span> <span class="n">jaro_winkler</span>
-<span class="kn">import</span> <span class="nn">utils.utils</span> <span class="k">as</span> <span class="nn">ut</span>
-
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="k">def</span> <span class="nf">semejanza</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">origen</span><span class="p">,</span> <span class="n">destino</span><span class="p">):</span>
-
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Tamaño matrices a comparar: origen {len(origen)}, destino {len(destino)}&#39;</span><span class="p">)</span>
-        
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;Calculando comparaciones&#39;</span><span class="p">)</span> 
-
-    <span class="c1"># Aquí hallamos todas las posibles comparaciones</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indice</span><span class="o">.</span><span class="n">estrictas</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">origen</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">destino</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="n">indice</span><span class="o">.</span><span class="n">estrictas</span><span class="p">,</span> <span class="n">suffixes</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_origen&#39;</span><span class="p">,</span><span class="s1">&#39;_destino&#39;</span><span class="p">))</span>
-            
-    <span class="k">else</span><span class="p">:</span> 
-        <span class="n">df</span> <span class="o">=</span> <span class="n">origen</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">destino_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">destino</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">destino_id</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">COL_1</span><span class="p">]</span> <span class="o">=</span> <span class="n">origen</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">ON</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">COL_2</span><span class="p">]</span> <span class="o">=</span> <span class="n">destino</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">ON</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Número de comparaciones: {len(df)}&#39;</span><span class="p">)</span>
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;Cálculo de distancia levenshtein&#39;</span><span class="p">)</span>
-
-    <span class="c1">## Aplicar Group by MARCA, referencia y LINEA para reducir tiempos. </span>
-    <span class="n">bach</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">estrictas</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Número de baches: </span><span class="si">{bach.shape[0]}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="n">porcentaje</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span>
-            <span class="n">f</span><span class="s1">&#39;Digite porcentaje para filtrar los resultados: &#39;</span><span class="p">))</span>
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Porcentaje para filtrar resultados: {int(porcentaje*100)}%&#39;</span><span class="p">)</span>
-    
-    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">df_consolidado</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">for</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">marca</span> <span class="ow">in</span> <span class="n">bach</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        
-        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="c1">#print(f&#39;Bache: # {count} de {bach.shape[0]} avance {round((count/bach.shape[0])*100,2)}%&#39;)</span>
-
-        <span class="n">df_temp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;TABLA&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">tabla</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;marca&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">marca</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        
-        <span class="n">df_temp</span><span class="p">[</span><span class="s1">&#39;levenshtein&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_temp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ratio</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">COL_1</span><span class="p">]),</span> 
-                <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">COL_2</span><span class="p">])),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="n">df_temp</span> <span class="o">=</span> <span class="n">df_temp</span><span class="p">[</span><span class="n">df_temp</span><span class="o">.</span><span class="n">levenshtein</span> <span class="o">&gt;=</span> <span class="n">porcentaje</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>            
-            <span class="n">df_consolidado</span> <span class="o">=</span> <span class="n">df_temp</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">df_consolidado</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_consolidado</span><span class="p">,</span> <span class="n">df_temp</span><span class="p">])</span>
-        
-    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Bache: # </span><span class="si">{count}</span><span class="s1"> de </span><span class="si">{bach.shape[0]}</span><span class="s1"> avance {round((count/bach.shape[0])*100,2)}%&#39;</span><span class="p">)</span>
-<span class="c1">#     ut.save_log(&#39;Cálculo de distancia jaro-winkler&#39;)</span>
-<span class="c1">#     df[&#39;jaro-winkler&#39;] = df.apply(lambda x: jaro_winkler(str(x[indice.COL_1]), </span>
-<span class="c1">#             str(x[indice.COL_2]), 0.1), axis=1)</span>
-    
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Resultado: Mayores al {int(porcentaje*100)}% = {len(df_consolidado)}&#39;</span><span class="p">)</span>
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;*ATENCIÓN: puede que aún falten filtros para establecer &#39;</span>
-            <span class="o">+</span> <span class="s1">&#39;la mejor coincidencia.&#39;</span><span class="p">)</span>
-    
-    <span class="n">df_consolidado</span> <span class="o">=</span> <span class="n">df_consolidado</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span> <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">destino_id</span> <span class="o">+</span> <span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">COL_1</span><span class="p">,</span> <span class="n">indice</span><span class="o">.</span><span class="n">COL_2</span><span class="p">]</span> 
-            <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">estrictas</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;levenshtein&#39;</span><span class="p">]</span> 
-            <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">conservar</span><span class="p">]</span>
-    <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">origen</span><span class="p">[</span><span class="o">~</span><span class="n">origen</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span>
-        <span class="n">df_consolidado</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]])]</span>
-
-    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Resultados sin coincidencia: {len(sin_coincidencia)}&#39;</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">df_consolidado</span><span class="p">,</span> <span class="n">sin_coincidencia</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Funciones-de-apoyo">Funciones de apoyo<a class="anchor-link" href="#Funciones-de-apoyo">&#182;</a></h2><p>Generalmente son funciones de apoyo o generacion de documentos, se puede optimizar el modelo con diferentes funciones de apoyo sin necesidad de cambiar los metedos de analisis de informacion.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Generar-informe">Generar informe<a class="anchor-link" href="#Generar-informe">&#182;</a></h3><p>Su objetivo es tomar las salidas del modelos y los resultados de los metodos del modelo y generar una salida en formato HTML o ipyn como bitacora del modelo.</p>
-<p>Este resultado se guarda en la carpeta de resultados del modelo</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">nbformat</span> <span class="k">as</span> <span class="nn">nbf</span>
-<span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-<span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">check_output</span>
-
-<span class="c1">#from objetos.datos import *</span>
-<span class="kn">import</span> <span class="nn">metadata.directory</span> <span class="k">as</span> <span class="nn">metadir</span>
-
-<span class="kn">import</span> <span class="nn">datetime</span>
-
-<span class="n">path</span> <span class="o">=</span> <span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span>
-
-<span class="k">def</span> <span class="nf">generar_informe</span><span class="p">():</span>
-    
-    <span class="n">nb</span> <span class="o">=</span> <span class="n">nbf</span><span class="o">.</span><span class="n">v4</span><span class="o">.</span><span class="n">new_notebook</span><span class="p">()</span>
-    <span class="n">nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">nbf</span><span class="o">.</span><span class="n">v4</span><span class="o">.</span><span class="n">new_markdown_cell</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
-<span class="s2"># Bitácora Modelo&quot;&quot;&quot;</span><span class="p">)]</span>
-
-    <span class="c1"># Para incertar texto antes del reporte de resultados</span>
-    <span class="n">fecha_y_hora</span>  <span class="o">=</span>  <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> 
-    
-    <span class="n">texto</span> <span class="o">=</span> <span class="s1">&#39;fecha: &#39;</span> <span class="o">+</span> <span class="n">fecha_y_hora</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y %H:%M:%S&#39;</span><span class="p">)</span>
-    <span class="n">nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbf</span><span class="o">.</span><span class="n">v4</span><span class="o">.</span><span class="n">new_markdown_cell</span><span class="p">(</span><span class="n">texto</span><span class="p">))</span>
-
-    <span class="n">fp</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;logs.txt&#39;</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> 
-            <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbf</span><span class="o">.</span><span class="n">v4</span><span class="o">.</span><span class="n">new_markdown_cell</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">nb</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbf</span><span class="o">.</span><span class="n">v4</span><span class="o">.</span><span class="n">new_markdown_cell</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="p">)))</span>
-    <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            
+            <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">sin_coincidencia</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span> <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">estrictas</span> <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">flexibles</span> <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">conservar_origen</span><span class="p">]</span>
 
-    <span class="n">nbf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;bitacora_modelo.ipynb&#39;</span><span class="p">)))</span>
-    <span class="n">check_output</span><span class="p">(</span><span class="s1">&#39;python -m nbconvert --to=html &#39;</span>
-            <span class="o">+</span> <span class="s1">&#39;--TemplateExporter.exclude_input=True &#39;</span> 
-            <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;bitacora_modelo.ipynb&#39;</span><span class="p">)),</span> 
-            <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">exacta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+            <span class="n">homologaciones</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">sin_coincidencia</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="nb">str</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;LINEA&#39;</span><span class="p">:</span> <span class="s1">&#39;LINEA2&#39;</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+            
+        <span class="c1"># Iniciamos el ciclo por métodos</span>
+        <span class="k">for</span> <span class="n">criterio</span><span class="p">,</span> <span class="n">valor</span> <span class="ow">in</span> <span class="n">indice</span><span class="o">.</span><span class="n">criterios</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>  
+            <span class="p">{</span>
+                
+            <span class="p">}</span>
+        
 </pre></div>
 
     </div>
@@ -13788,7 +13182,155 @@ Usamos expresiones regulares y archivos de referencia para generar las nuevas co
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="l1_contiene_l2">l1_contiene_l2<a class="anchor-link" href="#l1_contiene_l2">&#182;</a></h3><p>Una funcion especifica para el metodo de palabras cotenidas que nos permite desagregar una cadena de texto separandola por espacios en blanco y calculando cuantas palabras coinciden.</p>
+<p>El proceso continua con el ciclo por métodos, donde se lleva el seguimiento de los dataframe <code>exacta</code>, <code>homologaciones</code> y <code>sin coincidencia</code>, que contienen el seguimiento de todos los registros de <code>origen</code> durante el proceso.<br>
+Este proceso es fundamental para coordinas los filtros y las funciones aplicadas a los registros de <code>origen</code>, por tal razón se debe garatizar que se conserva la integridad de esta base de datos cada vez que modificamos o agregamos nuevos métodos.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Iniciamos el ciclo por métodos</span>
+<span class="k">for</span> <span class="n">criterio</span><span class="p">,</span> <span class="n">valor</span> <span class="ow">in</span> <span class="n">indice</span><span class="o">.</span><span class="n">criterios</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>  
+
+            <span class="c1">#Calculamos desagregar</span>
+                    
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;desagregar&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;### Desagregando&#39;</span><span class="p">)</span>
+                <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">desagregar</span><span class="o">.</span><span class="n">desagregar</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> 
+                        <span class="n">sin_coincidencia</span><span class="p">)</span>
+
+            <span class="c1"># Calculamos exactas</span>
+            
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;exactas&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;### Coincidencias exactas&#39;</span><span class="p">)</span>                
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">exacta</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">exacta</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">exactas</span><span class="o">.</span><span class="n">exactas</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> 
+                            <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span> <span class="c1"># if len(exacta) &gt; 0:</span>
+                    <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">temp</span> <span class="o">=</span> <span class="n">exacta</span>
+                    <span class="n">exacta</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">exactas</span><span class="o">.</span><span class="n">exactas</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> 
+                            <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                    <span class="n">exacta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">temp</span><span class="p">,</span> <span class="n">exacta</span><span class="p">])</span>
+
+                <span class="c1"># Imprimir exactas</span>
+
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;exactas_corrida_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>
+                <span class="n">exacta</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)),</span> <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> 
+                        <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Archivos generado: </span><span class="si">{name}</span><span class="s1">&#39;</span><span class="p">)</span>
+                
+            <span class="c1"># Calculamos semajanza</span>
+            
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;semejanza&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;### Calculando semejanza&#39;</span><span class="p">)</span> 
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">homologaciones</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">temp</span> <span class="o">=</span> <span class="n">homologaciones</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">homologaciones</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">semejanza</span><span class="o">.</span><span class="n">semejanza</span><span class="p">(</span>
+                            <span class="n">indice</span><span class="p">,</span> <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+                    
+                    <span class="n">homologaciones</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">temp</span><span class="p">,</span> <span class="n">homologaciones</span><span class="p">])</span> 
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">homologaciones</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">semejanza</span><span class="o">.</span><span class="n">semejanza</span><span class="p">(</span>
+                            <span class="n">indice</span><span class="p">,</span> <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>  
+                
+            <span class="c1"># Calculamos contenida</span>
+
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;palabras_contenidas&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;### Calculando palabras contenidas&#39;</span><span class="p">)</span> 
+                
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">homologaciones</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">temp</span> <span class="o">=</span> <span class="n">homologaciones</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">homologaciones</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">contenida</span><span class="o">.</span><span class="n">palabra_contenida_sin_orden</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> 
+                                    <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+                            <span class="p">)</span>
+                    
+                    <span class="n">homologaciones</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">temp</span><span class="p">,</span> <span class="n">homologaciones</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">homologaciones</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">contenida</span><span class="o">.</span><span class="n">palabra_contenida_sin_orden</span><span class="p">(</span>
+                                    <span class="n">indice</span><span class="p">,</span> <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+                            <span class="p">)</span>
+                
+            <span class="c1"># Calculamos desempate</span>
+
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;desempate&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">columna</span> <span class="ow">in</span> <span class="n">indice</span><span class="o">.</span><span class="n">desempate_cols</span><span class="p">:</span>
+                    
+                    <span class="c1"># Cada columna acumula en homologaciones los resultados filtrados en homologaciones</span>
+                    <span class="c1"># Es importante no perder ningún registro en origen_id durante este proceso</span>
+                    <span class="n">homologaciones</span> <span class="o">=</span> <span class="n">desempate</span><span class="o">.</span><span class="n">desempate</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">homologaciones</span><span class="p">,</span> <span class="n">columna</span><span class="p">)</span>
+                    <span class="n">duplicados</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)]</span>
+                    <span class="k">if</span> <span class="n">duplicados</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Existen duplicados despues correr desempate por </span><span class="si">{columna}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1">#                        import pdb; pdb.set_trace()</span>
+            
+            <span class="c1"># Coincidencias cruzadas</span>
+            
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;cruzar&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                
+                <span class="n">cruzar</span><span class="o">.</span><span class="n">destino_origen</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Despues de finalizar el ciclo por métodos, el modelo genera los archivos de salida de las tablas <code>homologaciones</code> y <code>sin coincidencia</code>, además genera el informe o 'bitácora' del modelo.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>           
+<span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;## Generación de archivos&#39;</span><span class="p">)</span>
+
+<span class="c1"># Imprimir homologaciones</span>
+
+<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;homologaciones_corrida_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>
+<span class="n">homologaciones</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)),</span> 
+        <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Archivos generado: </span><span class="si">{name}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">ut</span><span class="o">.</span><span class="n">docs_save</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+<span class="c1"># Imprimir sin coincidencia</span>
+
+<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;sin_coincidencia_corrida_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>
+<span class="n">sin_coincidencia</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)),</span> 
+        <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Archivos generado: </span><span class="si">{name}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">ut</span><span class="o">.</span><span class="n">docs_save</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+<span class="c1"># Generación informes</span>
+
+<span class="n">gi</span><span class="o">.</span><span class="n">generar_informe</span><span class="p">()</span>
+
+<span class="k">return</span> <span class="n">homologaciones</span><span class="p">,</span> <span class="n">sin_coincidencia</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A continuación el procedimiento completo:</p>
 
 </div>
 </div>
@@ -13799,176 +13341,157 @@ Usamos expresiones regulares y archivos de referencia para generar las nuevas co
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="k">def</span> <span class="nf">l1_contiene_l2</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">):</span>
-    
-    <span class="n">ls</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">]</span>
-            <span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">]</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">linea1_temp</span> <span class="o">=</span> <span class="n">ls</span><span class="p">[</span><span class="n">columna1</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">linea1_split</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
-            <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">ls</span><span class="p">,</span> <span class="n">linea1_temp</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> 
-            <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">],</span>
-            <span class="n">value_vars</span><span class="o">=</span><span class="n">linea1_temp</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
-            <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;posicion&#39;</span><span class="p">,</span>
-            <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;palabra&#39;</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">,</span> <span class="s1">&#39;palabra&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span>
-            <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-
-    <span class="n">linea1_split</span><span class="p">[</span><span class="s1">&#39;n_words&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">linea1_split</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">]</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">palabra</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
-
-    <span class="n">linea2_temp</span> <span class="o">=</span> <span class="n">ls</span><span class="p">[</span><span class="n">columna2</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">linea2_split</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
-            <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">ls</span><span class="p">,</span> <span class="n">linea2_temp</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> 
-            <span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">],</span>
-            <span class="n">value_vars</span><span class="o">=</span><span class="n">linea2_temp</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
-            <span class="n">var_name</span><span class="o">=</span><span class="s1">&#39;posicion&#39;</span><span class="p">,</span>
-            <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;palabra&#39;</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">,</span> <span class="s1">&#39;palabra&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span>
-            <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">linea1_split</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">linea1_split</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>   
-
-    <span class="n">lineas</span> <span class="o">=</span> <span class="n">linea1_split</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-            <span class="n">linea2_split</span><span class="p">,</span>
-            <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span>
-            <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">,</span> <span class="s1">&#39;palabra&#39;</span><span class="p">]</span>
-            <span class="p">)</span>
-
-    <span class="n">lineas</span><span class="p">[</span><span class="s1">&#39;n_words_2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lineas</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">]</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">palabra</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
-
-    <span class="n">lineas</span><span class="p">[</span><span class="s1">&#39;resultado&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lineas</span><span class="o">.</span><span class="n">n_words</span> <span class="o">==</span> <span class="n">lineas</span><span class="o">.</span><span class="n">n_words_2</span>
-    <span class="n">lins_g</span> <span class="o">=</span> <span class="n">lineas</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">])</span><span class="o">.</span><span class="n">resultado</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">lins_g</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="n">columna1</span><span class="p">,</span> <span class="n">columna2</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">resultado</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;resultado&#39;</span><span class="p">])</span>
-    
-    <span class="k">return</span> <span class="n">df</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="set_up">set_up<a class="anchor-link" href="#set_up">&#182;</a></h3><p>Descomprime la carpeta de entrada de datos y comprime la carpeta de resultados del modelo para evitar problemas de memoria.</p>
-<p>Genera las condiciones necesarias para correr el modelo.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">metadata.directory</span> <span class="k">as</span> <span class="nn">metadir</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
+<span class="kn">import</span> <span class="nn">objetos.datos</span> <span class="k">as</span> <span class="nn">datos</span>
+<span class="kn">import</span> <span class="nn">criterios_ejecucion</span> <span class="k">as</span> <span class="nn">ce</span>
+<span class="kn">import</span> <span class="nn">metodos.desagregar</span> <span class="k">as</span> <span class="nn">desagregar</span>
+<span class="kn">import</span> <span class="nn">metodos.exactas</span> <span class="k">as</span> <span class="nn">exactas</span>
+<span class="kn">import</span> <span class="nn">metodos.semejanza</span> <span class="k">as</span> <span class="nn">semejanza</span>
+<span class="kn">import</span> <span class="nn">metodos.contenida</span> <span class="k">as</span> <span class="nn">contenida</span>
+<span class="kn">import</span> <span class="nn">metodos.desempate</span> <span class="k">as</span> <span class="nn">desempate</span>
+<span class="kn">import</span> <span class="nn">metodos.cruzar</span> <span class="k">as</span> <span class="nn">cruzar</span>
 
-<span class="k">def</span> <span class="nf">inicio</span><span class="p">():</span>
-                 
-    <span class="n">fecha_ejecucion</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-
-    <span class="c1"># Genera directorios Input Output</span>
-    <span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">generar_rutas_Input_Output</span><span class="p">(</span><span class="n">Input_ruta</span><span class="o">=</span><span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_DATA</span><span class="p">,</span> 
-            <span class="n">Output_ruta</span><span class="o">=</span><span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span><span class="p">,</span><span class="n">firma</span><span class="o">=</span><span class="s1">&#39;2019-05-17&#39;</span><span class="p">)</span>
-
-    <span class="c1"># Crear logs.txt en CARPETA_RESULTADOS</span>
-    <span class="n">logs</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span><span class="p">,</span> 
-            <span class="s1">&#39;logs.txt&#39;</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> 
-    <span class="n">logs</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-    <span class="n">dic_archivos</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span><span class="p">,</span> 
-            <span class="s1">&#39;dic_archivos.txt&#39;</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> 
-    <span class="n">dic_archivos</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-<span class="k">def</span> <span class="nf">final</span><span class="p">():</span>
-    <span class="n">fecha_ejecucion</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    <span class="c1">#Genera directorios Input Output</span>
-    <span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">comprimir_rutas_Input_Output_en_zip</span><span class="p">(</span>
-            <span class="n">Input_ruta</span><span class="o">=</span><span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_DATA</span><span class="p">,</span> 
-            <span class="n">Output_ruta</span><span class="o">=</span><span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span><span class="p">,</span>
-            <span class="n">firma</span><span class="o">=</span><span class="n">fecha_ejecucion</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H%M%S&#39;</span><span class="p">)</span>
-            <span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="utils">utils<a class="anchor-link" href="#utils">&#182;</a></h3><p>Contiene las funciones mas pequenas y aleatorias:</p>
-<ul>
-<li><p>La funcion cols_combinations(flexibles, estrictas) nos permite hallar todas las posibles combinaciones en una lista de variables</p>
-</li>
-<li><p>La funcion save_log(log) imprime y guarda las salidas programadas de cada metodo del modelo</p>
-</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span> 
-<span class="c1">#import numpy as np</span>
-<span class="c1">#import pandas as pd</span>
-<span class="c1">#import re</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
+<span class="kn">import</span> <span class="nn">utils.utils</span> <span class="k">as</span> <span class="nn">ut</span>
+<span class="kn">import</span> <span class="nn">utils.generar_informe</span> <span class="k">as</span> <span class="nn">gi</span>
 <span class="kn">import</span> <span class="nn">metadata.directory</span> <span class="k">as</span> <span class="nn">metadir</span>
 
-<span class="c1"># Obtenemos las combinaciones para aplicar simplificación</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span>
 
-<span class="k">def</span> <span class="nf">cols_combinations</span><span class="p">(</span><span class="n">flexibles</span><span class="p">,</span> <span class="n">estrictas</span><span class="p">):</span>
-    <span class="n">cols_comb</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">cols</span> <span class="o">=</span> <span class="n">flexibles</span> <span class="o">+</span> <span class="n">estrictas</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">comb</span> <span class="o">=</span> <span class="n">it</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">comb</span><span class="p">:</span>
-            <span class="n">cols_comb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">calcular</span><span class="p">(</span> <span class="n">origen</span><span class="p">,</span> <span class="n">destino</span><span class="p">):</span>
+
+    <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">origen</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     
-    <span class="c1"># cols_comb de lista de tupla a lista de listas</span>
-    <span class="n">un_tuple</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cols_comb</span><span class="p">:</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span> <span class="c1">#+ estrictas</span>
-        <span class="n">un_tuple</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>  
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">iteracion</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ce</span><span class="o">.</span><span class="n">col_index</span><span class="p">):</span>
+        
+        <span class="n">indice</span> <span class="o">=</span> <span class="n">datos</span><span class="o">.</span><span class="n">Indice</span><span class="p">(</span><span class="n">iteracion</span><span class="p">,</span> <span class="n">ce</span><span class="o">.</span><span class="n">criterios</span><span class="p">)</span>
+        
+        <span class="c1"># Mostramos corrida actual</span>
+        <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;## Corrida: </span><span class="si">{indice.corrida}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Criterios de la   corrida</span>
+
+        <span class="c1"># print(&#39;Criterios: exactas, semejanza, palabras_contenidas, desempate, cruzar, desagregar&#39;)</span>
+        <span class="c1"># in_criterios = input(&#39;¿Cuáles métodos desea hacer?:&#39;)</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            
+            <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">sin_coincidencia</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span> <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">estrictas</span> <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">flexibles</span> <span class="o">+</span> <span class="n">indice</span><span class="o">.</span><span class="n">conservar_origen</span><span class="p">]</span>
+
+            <span class="n">exacta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+            <span class="n">homologaciones</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">sin_coincidencia</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="nb">str</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;LINEA&#39;</span><span class="p">:</span> <span class="s1">&#39;LINEA2&#39;</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">criterio</span><span class="p">,</span> <span class="n">valor</span> <span class="ow">in</span> <span class="n">indice</span><span class="o">.</span><span class="n">criterios</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>  
+
+            <span class="c1">#Calculamos desagregar</span>
+                    
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;desagregar&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;### Desagregando&#39;</span><span class="p">)</span>
+                <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">desagregar</span><span class="o">.</span><span class="n">desagregar</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> 
+                        <span class="n">sin_coincidencia</span><span class="p">)</span>
+
+            <span class="c1"># Calculamos exactas</span>
+            
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;exactas&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;### Coincidencias exactas&#39;</span><span class="p">)</span>                
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">exacta</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">exacta</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">exactas</span><span class="o">.</span><span class="n">exactas</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> 
+                            <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span> <span class="c1"># if len(exacta) &gt; 0:</span>
+                    <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">temp</span> <span class="o">=</span> <span class="n">exacta</span>
+                    <span class="n">exacta</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">exactas</span><span class="o">.</span><span class="n">exactas</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> 
+                            <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                    <span class="n">exacta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">temp</span><span class="p">,</span> <span class="n">exacta</span><span class="p">])</span>
+
+                <span class="c1"># Imprimir exactas</span>
+
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;exactas_corrida_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>
+                <span class="n">exacta</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)),</span> <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> 
+                        <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Archivos generado: </span><span class="si">{name}</span><span class="s1">&#39;</span><span class="p">)</span>
+                
+            <span class="c1"># Calculamos semajanza</span>
+            
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;semejanza&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;### Calculando semejanza&#39;</span><span class="p">)</span> 
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">homologaciones</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">temp</span> <span class="o">=</span> <span class="n">homologaciones</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">homologaciones</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">semejanza</span><span class="o">.</span><span class="n">semejanza</span><span class="p">(</span>
+                            <span class="n">indice</span><span class="p">,</span> <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+                    
+                    <span class="n">homologaciones</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">temp</span><span class="p">,</span> <span class="n">homologaciones</span><span class="p">])</span> 
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">homologaciones</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="n">semejanza</span><span class="o">.</span><span class="n">semejanza</span><span class="p">(</span>
+                            <span class="n">indice</span><span class="p">,</span> <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>  
+                
+            <span class="c1"># Calculamos contenida</span>
+
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;palabras_contenidas&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;### Calculando palabras contenidas&#39;</span><span class="p">)</span> 
+                
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">homologaciones</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">temp</span> <span class="o">=</span> <span class="n">homologaciones</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">homologaciones</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">contenida</span><span class="o">.</span><span class="n">palabra_contenida_sin_orden</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> 
+                                    <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+                            <span class="p">)</span>
+                    
+                    <span class="n">homologaciones</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">temp</span><span class="p">,</span> <span class="n">homologaciones</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">homologaciones</span><span class="p">,</span> <span class="n">sin_coincidencia</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">contenida</span><span class="o">.</span><span class="n">palabra_contenida_sin_orden</span><span class="p">(</span>
+                                    <span class="n">indice</span><span class="p">,</span> <span class="n">sin_coincidencia</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+                            <span class="p">)</span>
+                
+            <span class="c1"># Calculamos desempate</span>
+
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;desempate&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">columna</span> <span class="ow">in</span> <span class="n">indice</span><span class="o">.</span><span class="n">desempate_cols</span><span class="p">:</span>
+                    
+                    <span class="c1"># Cada columna acumula en homologaciones los resultados filtrados en homologaciones</span>
+                    <span class="c1"># Es importante no perder ningún registro en origen_id durante este proceso</span>
+                    <span class="n">homologaciones</span> <span class="o">=</span> <span class="n">desempate</span><span class="o">.</span><span class="n">desempate</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">homologaciones</span><span class="p">,</span> <span class="n">columna</span><span class="p">)</span>
+                    <span class="n">duplicados</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">indice</span><span class="o">.</span><span class="n">origen_id</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">keep</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)]</span>
+                    <span class="k">if</span> <span class="n">duplicados</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Existen duplicados despues correr desempate por </span><span class="si">{columna}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1">#                        import pdb; pdb.set_trace()</span>
+            
+            <span class="c1"># Coincidencias cruzadas</span>
+            
+            <span class="k">if</span> <span class="n">criterio</span> <span class="o">==</span> <span class="s1">&#39;cruzar&#39;</span> <span class="ow">and</span> <span class="n">valor</span><span class="p">:</span>
+                
+                <span class="n">cruzar</span><span class="o">.</span><span class="n">destino_origen</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">destino</span><span class="p">)</span>
+
+    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="s1">&#39;## Generación de archivos&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Imprimir homologaciones</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;homologaciones_corrida_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>
+    <span class="n">homologaciones</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)),</span> 
+            <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Archivos generado: </span><span class="si">{name}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ut</span><span class="o">.</span><span class="n">docs_save</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Imprimir sin coincidencia</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;sin_coincidencia_corrida_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>
+    <span class="n">sin_coincidencia</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)),</span> 
+            <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">ut</span><span class="o">.</span><span class="n">save_log</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Archivos generado: </span><span class="si">{name}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ut</span><span class="o">.</span><span class="n">docs_save</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     
-    <span class="k">return</span> <span class="n">un_tuple</span> 
+    <span class="c1"># Generación informes</span>
 
-<span class="c1"># Función para registrar las salidas del modelo</span>
+    <span class="n">gi</span><span class="o">.</span><span class="n">generar_informe</span><span class="p">()</span>
 
-<span class="k">def</span> <span class="nf">save_log</span><span class="p">(</span><span class="n">log</span><span class="p">):</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
-<span class="c1">#    with open(str(path / &#39;logs.txt&#39;), &#39;a&#39;, encoding=&#39;utf8&#39;) as f:</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;logs.txt&#39;</span><span class="p">)),</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> 
-              <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">log</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">docs_save</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">metadir</span><span class="o">.</span><span class="n">Path</span><span class="o">.</span><span class="n">CARPETA_RESULTADOS</span>
-    <span class="c1">#print(log)</span>
-<span class="c1">#    with open(str(path / &#39;logs.txt&#39;), &#39;a&#39;, encoding=&#39;utf8&#39;) as f:</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;dic_archivos.txt&#39;</span><span class="p">)),</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> 
-              <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">homologaciones</span><span class="p">,</span> <span class="n">sin_coincidencia</span>
+            
 </pre></div>
 
     </div>
